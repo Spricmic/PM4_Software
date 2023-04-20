@@ -10,6 +10,16 @@
 extern void blink();
 
 
+// declare an enumerator for the different fluid in the elisa process.
+typedef enum {
+  AIR = 0,
+  ANTIGEN = 1,
+  BLOOD = 2,
+  ROX = 3,
+  WASHING = 4
+}fluid;
+
+
 void setup() {
   // put your setup code here, to run once:
 }
@@ -148,7 +158,13 @@ void roxflush(){
 
 // make description of the function
 void analysation(){
-  read_light_sensor()
+  turn_on_laser()                               //turns on the green laser in the Reaction chamber
+  delay("some time")                            //delay to allow the Fluids to react and to emit light
+  int data = read_color_sensor()                //reads the value of the AdaFruit lightsensor
+  turn_off_laser()                              //turns off the green laser in the reaction chamber
+  int result = analyze_data(data)               //converts data to "readable Values" those to make sense if the sample is positiv or negative 
+  write_data_to_led(result)                     //converts positive negativ result to output on the LED 
+  wait_button_push()                            //waits until button is pushed to have enough time to read the value.
 }
 
 

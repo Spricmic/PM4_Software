@@ -1,9 +1,23 @@
 void setup() {
   // put your setup code here, to run once:
+}
+
+/**
+* This Function turns on the laser
+*/
+void turn_on_laser(){
 
 }
 
-void blink() {
-  // put your main code here, to run repeatedly:
 
+/**
+* This Function turns off the laser
+*/
+void turn_off_laser(){
+
+}
+
+
+void loop() {
+  // Code for testing of the Laser functions
 }
