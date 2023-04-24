@@ -17,6 +17,7 @@ typedef enum {
   BLOOD = 2,
   ROX = 3,
   WASHING = 4
+  CLOSED = 5
 }fluid;
 
 
@@ -33,37 +34,37 @@ void loop() {
   {
   // Air flush
   case 1:
-    airflush();
+    flush(AIR);
     state ++;
     break;
   
   // Antigen
   case 2:
-    antigenflush();
+    flush(ANTIGEN);
     state ++;
     break;
 
   // air
   case 3:
-    airflush();
+    flush(AIR);
     state ++;
     break;
 
   // blood
   case 4:
-    blood();
+    flush(BLOOD);
     state ++;
     break;
 
   // washing
   case 5:
-    airflush();
+    flush(AIR);
     state ++;
     break;
 
   //Rox
   case 6:
-    roxflush();
+    flush(ROX);
     state ++;
     break;
 
@@ -75,13 +76,13 @@ void loop() {
 
   //washing
   case 8:
-    washing();
+    flush(WASHING);
     state ++;
     break;
 
   // air
   case 9:
-    airflush()
+    flush(AIR)
     state = 1;
     break;
 
@@ -92,24 +93,35 @@ void loop() {
 
 }
 
-void airflush(){
-
+void flush(int fluid){
+  if (fluid == BLOOD){
+    turn_distribution_valve(fluid);               //open the valve to recieve blood sample
+    start_filling_blood();                        //sent signal to user to fill in blood sample
+    finished_filling_blood();                     //recieved a signal when the blood is filled into the device
+    turn_distribution_valve(CLOSED);              //close the valve to prevent backflow
+  }
+  else{
+    float pressure = read_pressure_sensor()       //Read pressure value from the prssure sensor
+    IF pressure < "something" {                   //Check if the pressure is high enough
+      turn_on_pump();                             //turn on the pump to gain pressure
+    
+      while pressure < "something" {              //wait until the pressure reaches the wanted value
+        float pressure = read_pressure_sensor();
+        delay(1000);
+      }
+    }
+    open_checkvalve()
+    turn_distribution_valve(fluid);               //open distribution valve to let air flow
+    delay("some time")                            //wait for the air to flow
+    turn_off_pump();                              //stop the flow of the air
+    turn_distribution_valve(CLOSED);              //close the distribution valve
+    close_checkvalve()                            //close the valve after the reaction chamber
+  }
+  
+}
 }
 
 
-void antigenflush(){
-
-}
-
-
-void blood(){
-
-}
-
-
-void roxflush(){
-
-}
 
 // make description of the function
 void analysation(){
@@ -123,9 +135,6 @@ void analysation(){
 }
 
 
-void washing(){
-
-}
 
 
  **this may not be a function cuz it iisnt 't related to any component
