@@ -5,6 +5,10 @@
 #include "color_sensor.ino"
 #include "pump.ino"
 #include "check_valve.ino"
+#include <Servo.h>
+#include <Wire.h>
+
+Servo Distribution_Valve_Motor;
 
 
 extern void blink();
@@ -21,8 +25,26 @@ typedef enum {
 }fluid;
 
 
+// declare Pin modes
+const int START_SWITCH_PIN = 5; //start button
+const int GREEN_LED_PIN = 6;  // green led
+const int YELLOW_LED_PIN = 7;  // yellow led
+const int RED_LED_PIN = 8;  // red led
+const int LASER_DIODE_PIN = 9;
+const int VALVE_PIN = 10;
+const int PUMP_PIN = 11;
+const int SERVO_MOTOR_PIN = 12;
+
 void setup() {
   // put your setup code here, to run once:
+  pinMode(START_SWITCH_PIN, INPUT);
+  pinMode(GREEN_LED_PIN, OUTPUT);
+  pinMode(YELLOW_LED_PIN, OUTPUT);
+  pinMode(RED_LED_PIN, OUTPUT);
+  pinMode(LASER_DIODE_PIN, OUTPUT);
+  pinMode(VALVE_PIN, OUTPUT);
+  pinMode(PUMP_PIN, OUTPUT);
+  Distribution_Valve_Motor.attach(SERVO_MOTOR_PIN)
 }
 
 
@@ -90,8 +112,8 @@ void loop() {
     state = 1;
     break;
   }
-
 }
+
 
 void flush(int fluid){
   if (fluid == BLOOD){
@@ -100,6 +122,7 @@ void flush(int fluid){
     finished_filling_blood();                     //recieved a signal when the blood is filled into the device
     turn_distribution_valve(CLOSED);              //close the valve to prevent backflow
   }
+
   else{
     float pressure = read_pressure_sensor()       //Read pressure value from the prssure sensor
     IF pressure < "something" {                   //Check if the pressure is high enough
@@ -110,6 +133,7 @@ void flush(int fluid){
         delay(1000);
       }
     }
+    
     open_checkvalve()
     turn_distribution_valve(fluid);               //open distribution valve to let air flow
     delay("some time")                            //wait for the air to flow
@@ -119,22 +143,19 @@ void flush(int fluid){
   }
   
 }
-}
 
 
-
-// make description of the function
+/**
+* function analyzes the fluorescent in the reaction chamber and 
+* controlls the LED to show the result
+*/
 void analysation(){
-  turn_on_laser()                               //turns on the green laser in the Reaction chamber
-  delay("some time")                            //delay to allow the Fluids to react and to emit light
-  int data = read_color_sensor()                //reads the value of the AdaFruit lightsensor
-  turn_off_laser()                              //turns off the green laser in the reaction chamber
-  int result = analyze_data(data)               //converts data to "readable Values" those to make sense if the sample is positiv or negative 
-  write_data_to_led(result)                     //converts positive negativ result to output on the LED 
-  wait_button_push()                            //waits until button is pushed to have enough time to read the value.
+  turn_on_laser();                               //turns on the green laser in the Reaction chamber
+  delay("some time");                            //delay to allow the Fluids to react and to emit light
+  int data = read_color_sensor();                //reads the value of the AdaFruit lightsensor
+  turn_off_laser();                             //turns off the green laser in the reaction chamber
+  int result = analyze_data(data);               //converts data to "readable Values" those to make sense if the sample is positiv or negative 
+  write_data_to_led(result);                     //converts positive negativ result to output on the LED 
+  wait_button_push();                            //waits until button is pushed to have enough time to read the value.
 }
 
-
-
-
- **this may not be a function cuz it iisnt 't related to any component
