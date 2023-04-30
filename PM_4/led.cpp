@@ -1,39 +1,38 @@
-const int START_SWITCH_PIN = 5; // button
-const int GREEN_LED_PIN = 6;  // green led
-const int YELLOW_LED_PIN = 7;  // yellow led
-const int RED_LED_PIN = 8;  // red led
+#include "led.h"
+#include <Arduino.h>
 
-
-void setup() {
-  // put your setup code here, to run once:
-  pinMode(GREEN_LED_PIN, OUTPUT);
-  pinMode(YELLOW_LED_PIN, OUTPUT);
-  pinMode(RED_LED_PIN, OUTPUT);
-}
-
+// Define LED pins
+extern const int START_SWITCH_PIN;
+extern const int GREEN_LED_PIN;
+extern const int YELLOW_LED_PIN;
+extern const int RED_LED_PIN;
 
 /**
 * This function writes turns on LED depending on the state of the system.
 * @param result positiv or negativ result of the analysis in the reaction chamber.
 */
-void write_to_led(int result){
-  if (result == READY){
-    write_ready();
-  }
-  else if(result == NEGATIV){
-    write_negative();
-  }
-  else if (result == POSITIV){
-    write_positive();
-  }
-  else if (result == SOMETHING){
-    write_do_something();
-  }
-  else if (result == WORKING){
-    write_work_inprogress();
-  }
-  else{
-    write_fail();
+void write_to_led(result r){
+  switch (r) {
+    case READY:
+      write_ready();
+      break;
+    case NEGATIVE:
+      write_negative();
+      break;
+    case POSITIVE:
+      write_positive();
+      break;
+    case SOMETHING:
+      write_do_something();
+      break;
+    case WORKING:
+      write_work_inprogress();
+      break;
+    case FAIL:
+      write_fail();
+      break;
+    default:
+      break;
   }
 }
 
@@ -111,13 +110,8 @@ void write_fail(){
 * waits for button input until programm is continued.
 */
 void wait_for_input(){
-  while (digitalRead(START_SWITCH_PIN) == 0){
+  while (digitalRead(START_SWITCH_PIN) == LOW){
+    delay(10);  // small delay to reduce CPU usage
     // wait for input
   }
-}
-
-
-void loop() {
-  // put your main code here, to run repeatedly:
-
 }

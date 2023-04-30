@@ -1,5 +1,10 @@
+
+
+const int LASER_DIODE_PIN = 9;
+
 void setup() {
   // put your setup code here, to run once:
+  pinMode(LASER_DIODE_PIN, OUTPUT);
 }
 
 /**
@@ -20,4 +25,8 @@ void turn_off_laser(){
 
 void loop() {
   // Code for testing of the Laser functions
+  turn_on_laser()
+  delay(500);
+  turn_off_laser()
+  delay(500);
 }

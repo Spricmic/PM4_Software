@@ -1,7 +1,8 @@
-#include "Laser.ino"
+#include "pins_setup.h"
+#include "Laser.h"
+#include "led.h"
 #include "pressure_sensor.ino"
 #include "motor_valve.ino"
-#include "LED.ino"
 #include "color_sensor.ino"
 #include "pump.ino"
 #include "check_valve.ino"
@@ -9,9 +10,10 @@
 #include <Wire.h>
 
 Servo Distribution_Valve_Motor;
+Laser green_laser;
 
 
-extern void blink();
+extern void blink();  //This is a mock inport for the functions that will follow.
 
 
 // declare an enumerator for the different fluid in the elisa process.
@@ -24,33 +26,52 @@ typedef enum {
   CLOSED = 5
 }fluid;
 
-
-// declare Pin modes
-const int START_SWITCH_PIN = 5; //start button
-const int GREEN_LED_PIN = 6;  // green led
-const int YELLOW_LED_PIN = 7;  // yellow led
-const int RED_LED_PIN = 8;  // red led
-const int LASER_DIODE_PIN = 9;
-const int VALVE_PIN = 10;
-const int PUMP_PIN = 11;
-const int SERVO_MOTOR_PIN = 12;
+// enumerator to spezifie which part of the process to activate.
+typedef enum {
+  FULL,
+  LED,
+  LASER,
+  CHECK_VALVE,
+  COLOR_SENSOR,
+  MOTOR_VALVE,
+  PRESSURE_SENSOR,
+  PUMP
+}mode;
 
 void setup() {
   // put your setup code here, to run once:
-  pinMode(START_SWITCH_PIN, INPUT);
-  pinMode(GREEN_LED_PIN, OUTPUT);
-  pinMode(YELLOW_LED_PIN, OUTPUT);
-  pinMode(RED_LED_PIN, OUTPUT);
-  pinMode(LASER_DIODE_PIN, OUTPUT);
-  pinMode(VALVE_PIN, OUTPUT);
-  pinMode(PUMP_PIN, OUTPUT);
-  Distribution_Valve_Motor.attach(SERVO_MOTOR_PIN)
+  setup_pins();
 }
 
 
 int state;
 
-void loop() {
+
+void loop(){
+  if (choosen_mode == FULL) {
+  work_loop();
+} else if (choosen_mode == LED) {
+  LED_loop();
+} else if (choosen_mode == LASER) {
+  laser_loop();
+} else if (choosen_mode == CHECK_VALVE) {
+  check_valve_loop();
+} else if (choosen_mode == COLOR_SENSOR) {
+  color_sensor_loop();
+} else if (choosen_mode == MOTOR_VALVE) {
+  motor_valve_loop();
+} else if (choosen_mode == PRESSURE_SENSOR) {
+  pressure_sensor_loop();
+} else if (choosen_mode == PUMP) {
+  pump_loop();
+} else {
+  // handle invalid mode
+  pass
+}
+
+}
+
+void work_loop() {
   // put your main code here, to run repeatedly:
   switch (state)
   {
@@ -112,6 +133,92 @@ void loop() {
     state = 1;
     break;
   }
+}
+
+/**
+* loop to test the  functions.
+*/
+void LED_loop(){
+  /*
+  * The following function is for testing and debugging porposses only and should not run in the acctual ELISA Process.
+  */
+  wait_for_input();
+  write_to_led(READY);
+
+  wait_for_input();
+  write_to_led(NEGATIVE);
+
+  wait_for_input();
+  write_to_led(POSITIVE);
+
+  wait_for_input();
+  write_to_led(SOMETHING);
+
+  wait_for_input();
+  write_to_led(WORKING);
+
+  wait_for_input();
+  write_to_led(FAIL);
+}
+
+
+/**
+* loop to test the laser functions.
+*/
+void laser_loop(){
+  turn_on_laser();
+  delay(500);
+  turn_off_laser();
+  delay(500);
+}
+
+
+/**
+* loop to test the laser functions.
+*/
+void check_valve_loop(){
+
+}
+
+
+/**
+* loop to test the laser functions.
+*/
+void color_sensor_loop(){
+  // put your code to test the functions of color_sensor here.
+  float red, green, blue = read_color_sensor()
+  // print the RGB values to the serial monitor
+  Serial.print("Red:   ");
+  Serial.println(red);
+  Serial.print("Green: ");
+  Serial.println(green);
+  Serial.print("Blue:  ");
+  Serial.println(blue);
+  delay(500);
+}
+
+
+/**
+* loop to test the laser functions.
+*/
+void motor_valve_loop(){
+
+}
+
+
+/**
+* loop to test the laser functions.
+*/
+void pressure_sensor_loop(){
+
+}
+
+
+/**
+* loop to test the laser functions.
+*/
+void pump_loop(){
+
 }
 
 
