@@ -51,8 +51,8 @@ int read_color_sensor() {
   Serial.println("");
 }
 
-int analyze_data(int color_sensor_reading) {
+result analyze_data(int color_sensor_reading) {
   // check what is positive / negative / error
-  int result = 0;
-  return result;
+  result test_result = READY;
+  return test_result;
 }

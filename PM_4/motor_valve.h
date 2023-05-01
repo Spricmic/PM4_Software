@@ -16,7 +16,7 @@ typedef enum {
 }fluid;
 
 // makes the setup for the motorvalve
-void motorvalve_setup();
+void motor_valve_setup();
 
 /** 
 *This function turns the distribution valve to the fluid channel

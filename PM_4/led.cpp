@@ -40,9 +40,11 @@ void write_to_led(result r){
 * turns on green signal to show that the device is ready.
 */
 void write_ready(){
+  while (digitalRead(START_SWITCH_PIN) == LOW){
   digitalWrite(GREEN_LED_PIN, HIGH);
   digitalWrite(YELLOW_LED_PIN, LOW);
   digitalWrite(RED_LED_PIN, LOW);
+  }
 }
 
 
@@ -50,12 +52,15 @@ void write_ready(){
 * green led starts blinking to show negativ result
 */
 void write_negative(){
-  digitalWrite(GREEN_LED_PIN, HIGH);
+  digitalWrite(GREEN_LED_PIN, LOW);
   digitalWrite(YELLOW_LED_PIN, LOW);
   digitalWrite(RED_LED_PIN, LOW);
-  delay(500);
-  digitalWrite(GREEN_LED_PIN, LOW);
-  delay(500);
+  while (digitalRead(START_SWITCH_PIN) == LOW){
+    digitalWrite(GREEN_LED_PIN, HIGH);
+    delay(500);
+    digitalWrite(GREEN_LED_PIN, LOW);
+    delay(500);
+  }
 }
 
 
@@ -65,10 +70,13 @@ void write_negative(){
 void write_positive(){
   digitalWrite(GREEN_LED_PIN, LOW);
   digitalWrite(YELLOW_LED_PIN, LOW);
-  digitalWrite(RED_LED_PIN, HIGH);
-  delay(500);
   digitalWrite(RED_LED_PIN, LOW);
-  delay(500);
+  while (digitalRead(START_SWITCH_PIN) == LOW){
+    digitalWrite(RED_LED_PIN, HIGH);
+    delay(500);
+    digitalWrite(RED_LED_PIN, LOW);
+    delay(500);
+  }
 }
 
 
@@ -77,12 +85,14 @@ void write_positive(){
 */
 void write_do_something(){
   digitalWrite(GREEN_LED_PIN, LOW);
-  digitalWrite(YELLOW_LED_PIN, HIGH);
-  digitalWrite(RED_LED_PIN, LOW);
-  delay(500);
   digitalWrite(YELLOW_LED_PIN, LOW);
-  delay(500);
-  wait_for_input();
+  digitalWrite(RED_LED_PIN, LOW);
+  while (digitalRead(START_SWITCH_PIN) == LOW){
+    digitalWrite(YELLOW_LED_PIN, HIGH);
+    delay(500);
+    digitalWrite(YELLOW_LED_PIN, LOW);
+    delay(500);
+  }
 }
 
 
@@ -90,9 +100,9 @@ void write_do_something(){
 * yellow light is constantly on to show that the system is progressing
 */
 void write_work_inprogress(){
-  digitalWrite(GREEN_LED_PIN, LOW);
-  digitalWrite(YELLOW_LED_PIN, HIGH);
-  digitalWrite(RED_LED_PIN, LOW);
+    digitalWrite(GREEN_LED_PIN, LOW);
+    digitalWrite(YELLOW_LED_PIN, HIGH);
+    digitalWrite(RED_LED_PIN, LOW);
 }
 
 
@@ -100,9 +110,9 @@ void write_work_inprogress(){
 * turn on all the lights to signal a malfunction.
 */
 void write_fail(){
-  digitalWrite(GREEN_LED_PIN, HIGH);
-  digitalWrite(YELLOW_LED_PIN, HIGH);
-  digitalWrite(RED_LED_PIN, HIGH);
+    digitalWrite(GREEN_LED_PIN, HIGH);
+    digitalWrite(YELLOW_LED_PIN, HIGH);
+    digitalWrite(RED_LED_PIN, HIGH);
 }
 
 /**
@@ -110,6 +120,11 @@ void write_fail(){
 */
 void wait_for_input(){
   while (digitalRead(START_SWITCH_PIN) == LOW){
+    delay(10);  // small delay to reduce CPU usage
+    // wait for input
+  }
+  // wait until button has been released again.
+  while (digitalRead(START_SWITCH_PIN) != LOW){
     delay(10);  // small delay to reduce CPU usage
     // wait for input
   }

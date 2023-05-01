@@ -1,7 +1,5 @@
 #include "Laser.h"
-
-extern const int LASER_DIODE_PIN;
-extern const int LASER_DIODE_OUTPUT_MODE;
+#include "pins_setup.h"
 
 void laser_setup(){
   pinMode(LASER_DIODE_PIN, OUTPUT);

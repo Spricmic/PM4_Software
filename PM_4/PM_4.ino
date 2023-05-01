@@ -10,11 +10,6 @@
 #include <Wire.h>
 
 
-// define const
-const float MAX_PRESSURE = 10.0; // input max pressure
-
-
-
 // enumerator to spezifie which part of the process to activate.
 typedef enum {
   FULL,
@@ -27,40 +22,94 @@ typedef enum {
   PUMP
 }mode;
 
+
+// define const
+const float MAX_PRESSURE = 10.0; // input max pressure
+mode choosen_mode = MOTOR_VALVE;  // defines in which mode the void loop runes for different testing setups
+
+
 void setup() {
   // put your setup code here, to run once:
-  setup_pins();
-  pressure_sensor_setup();
-  setupPump();
+  switch (choosen_mode) {
+    case FULL:
+      // Call function for FULL mode
+      setup_pins();
+      pressure_sensor_setup();
+      setup_color_sensor();
+      setupPump();
+      break;
+    case LED:
+      // Call function for LED mode
+      setup_pins();
+      break;
+    case LASER:
+      // Call function for LASER mode
+      setup_pins();
+      break;
+    case CHECK_VALVE:
+      // Call function for CHECK_VALVE mode
+      setup_pins();
+      break;
+    case COLOR_SENSOR:
+      // Call function for COLOR_SENSOR mode
+      setup_pins();
+      setup_color_sensor();
+      break;
+    case MOTOR_VALVE:
+      // Call function for MOTOR_VALVE mode
+      setup_pins();
+      motor_valve_setup();
+      break;
+    case PRESSURE_SENSOR:
+      // Call function for PRESSURE_SENSOR mode
+      setup_pins();
+      pressure_sensor_setup();
+      break;
+    case PUMP:
+      // Call function for PUMP mode
+      setup_pins();
+      setupPump();
+      break;
+    default:
+      // Handle invalid mode
+      break;
+  }
 }
 
 
 int state;
-int choosen_mode = LED;  // defines in which mode the void loop runes for different testing setups
 
 
-void loop(){
-  if (choosen_mode == FULL) {
-  work_loop();
-} else if (choosen_mode == LED) {
-  LED_loop();
-} else if (choosen_mode == LASER) {
-  laser_loop();
-} else if (choosen_mode == CHECK_VALVE) {
-  check_valve_loop();
-} else if (choosen_mode == COLOR_SENSOR) {
-  color_sensor_loop();
-} else if (choosen_mode == MOTOR_VALVE) {
-  motor_valve_loop();
-} else if (choosen_mode == PRESSURE_SENSOR) {
-  pressure_sensor_loop();
-} else if (choosen_mode == PUMP) {
-  pump_loop();
-} else {
-  // handle invalid mode
-  
-}
-
+void loop() {
+  switch (choosen_mode) {
+    case FULL:
+      work_loop();
+      break;
+    case LED:
+      LED_loop();
+      break;
+    case LASER:
+      laser_loop();
+      break;
+    case CHECK_VALVE:
+      check_valve_loop();
+      break;
+    case COLOR_SENSOR:
+      color_sensor_loop();
+      break;
+    case MOTOR_VALVE:
+      motor_valve_loop();
+      break;
+    case PRESSURE_SENSOR:
+      pressure_sensor_loop();
+      break;
+    case PUMP:
+      pump_loop();
+      break;
+    default:
+      // handle invalid mode
+      break;
+  }
 }
 
 void work_loop() {
@@ -132,24 +181,30 @@ void work_loop() {
 */
 void LED_loop(){
   /*
-  * The following function is for testing and debugging porposses only and should not run in the acctual ELISA Process.
+  * The following function is for testing and debugging purposses only and should not run in the acctual ELISA Process.
   */
   wait_for_input();
+  delay(100);
   write_to_led(READY);
 
   wait_for_input();
+  delay(100);
   write_to_led(NEGATIVE);
 
   wait_for_input();
+  delay(100);
   write_to_led(POSITIVE);
 
   wait_for_input();
+  delay(100);
   write_to_led(SOMETHING);
 
   wait_for_input();
+  delay(100);
   write_to_led(WORKING);
 
   wait_for_input();
+  delay(100);
   write_to_led(FAIL);
 }
 
@@ -158,25 +213,27 @@ void LED_loop(){
 * loop to test the laser functions.
 */
 void laser_loop(){
+  wait_for_input();
   turn_on_laser();
-  delay(500);
+  wait_for_input();
   turn_off_laser();
-  delay(500);
+  wait_for_input();
 }
 
 
 /**
-* loop to test the laser functions.
+* loop to test the che checkvalve functions.
 */
 void check_valve_loop(){
+  wait_for_input();
   open_checkvalve();
-  delay(10000);
+  wait_for_input();
   close_checkvalve();
 }
 
 
 /**
-* loop to test the laser functions.
+* loop to test the color sensor functions.
 */
 void color_sensor_loop(){
   // put your code to test the functions of color_sensor here.
@@ -193,19 +250,27 @@ void color_sensor_loop(){
 
 
 /**
-* loop to test the laser functions.
+* loop to test the valve turning motor functions.
 */
 void motor_valve_loop(){
   // put your main code here, to run repeatedly:
+  wait_for_input();
   turn_distribution_valve(AIR);
-  delay(1000);
+  wait_for_input();
   turn_distribution_valve(ANTIGEN);
-  delay(2000);
+  wait_for_input();
+  turn_distribution_valve(BLOOD);
+  wait_for_input();
+  turn_distribution_valve(ROX);
+  wait_for_input();
+  turn_distribution_valve(WASHING);
+  wait_for_input();
+  turn_distribution_valve(CLOSED);
 }
 
 
 /**
-* loop to test the laser functions.
+* loop to test the pressure sensor functions.
 */
 void pressure_sensor_loop(){
   float pressure_hPa = read_pressure_sensor();
@@ -216,7 +281,7 @@ void pressure_sensor_loop(){
 
 
 /**
-* loop to test the laser functions.
+* loop to test the pump functions.
 */
 void pump_loop(){
   // put your main code here, to run repeatedly:

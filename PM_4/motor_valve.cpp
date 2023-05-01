@@ -1,4 +1,5 @@
 #include "led.h"
+#include <Servo.h>
 #include <Arduino.h>
 #include "motor_valve.h"
 
@@ -6,18 +7,19 @@
 extern const int SERVO_MOTOR_PIN;
 Servo Distribution_Valve_Motor;
 
-void setup() {
-  pinMode(SERVO_MOTOR_PIN, OUTPUT);
+void motor_valve_setup() {
   Distribution_Valve_Motor.attach(SERVO_MOTOR_PIN);
+  Serial.begin(9600);
 }
 
 /** 
 *This function turns the distribution valve to the fluid channel
-*@param state types of enumerator fluid that the distribution valve turn to
+*@param choosen_fluid types of enumerator fluid that the distribution valve turn to
 */
-void turn_distribution_valve(fluid state) { 
-  int degree = convert_input_to_pwm(state);
+void turn_distribution_valve(fluid choosen_fluid) { 
+  float degree = convert_input_to_pwm(choosen_fluid);
   Distribution_Valve_Motor.write(degree);
+  delay(15);
 }
 
 /** 
@@ -29,14 +31,14 @@ float convert_input_to_pwm(fluid state) {
   if (state == AIR) {
     return 0.0;  // value for: AIR
   }else if (state == ANTIGEN) {
-    return 0.0;  // value for: ANTIGEN
+    return 20.0;  // value for: ANTIGEN
   }else if (state == BLOOD) {
-    return 0.0;  // value for: BLOOD
+    return 40.0;  // value for: BLOOD
   }else if (state == ROX) {
-    return 0.0;  // value for: ROX
+    return 60.0;  // value for: ROX
   }else if (state == WASHING) {
-    return 0.0;  // value for: WASHING 
+    return 80.0;  // value for: WASHING 
   }else if (state == CLOSED) {
-    return 0.0;  // value for: CLOSED
+    return 100.0;  // value for: CLOSED
   }
 }

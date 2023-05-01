@@ -1,4 +1,5 @@
 #include "Laser.h"
+#include "pins_setup.h"
 
 extern const int VALVE_PIN;
 
