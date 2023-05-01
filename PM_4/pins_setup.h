@@ -1,6 +1,9 @@
 #ifndef PINS_SETUP_H
 #define PINS_SETUP_H
 
+#include <Arduino.h>
+#include <Servo.h>
+
 // Pin definitions
 const int START_SWITCH_PIN = 5; // start button
 const int GREEN_LED_PIN = 6;  // green led

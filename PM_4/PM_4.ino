@@ -1,30 +1,19 @@
 #include "pins_setup.h"
 #include "Laser.h"
 #include "led.h"
-#include "pressure_sensor.ino"
-#include "motor_valve.ino"
-#include "color_sensor.ino"
-#include "pump.ino"
-#include "check_valve.ino"
+#include "pressure_sensor.h"
+#include "motor_valve.h"
+#include "color_sensor.h"
+#include "pump.h"
+#include "check_valve.h"
 #include <Servo.h>
 #include <Wire.h>
 
-Servo Distribution_Valve_Motor;
-Laser green_laser;
+
+// define const
+const float MAX_PRESSURE = 10.0; // input max pressure
 
 
-extern void blink();  //This is a mock inport for the functions that will follow.
-
-
-// declare an enumerator for the different fluid in the elisa process.
-typedef enum {
-  AIR = 0,
-  ANTIGEN = 1,
-  BLOOD = 2,
-  ROX = 3,
-  WASHING = 4
-  CLOSED = 5
-}fluid;
 
 // enumerator to spezifie which part of the process to activate.
 typedef enum {
@@ -41,10 +30,13 @@ typedef enum {
 void setup() {
   // put your setup code here, to run once:
   setup_pins();
+  pressure_sensor_setup();
+  setupPump();
 }
 
 
 int state;
+int choosen_mode = LED;  // defines in which mode the void loop runes for different testing setups
 
 
 void loop(){
@@ -66,7 +58,7 @@ void loop(){
   pump_loop();
 } else {
   // handle invalid mode
-  pass
+  
 }
 
 }
@@ -125,7 +117,7 @@ void work_loop() {
 
   // air
   case 9:
-    flush(AIR)
+    flush(AIR);
     state = 1;
     break;
 
@@ -177,7 +169,9 @@ void laser_loop(){
 * loop to test the laser functions.
 */
 void check_valve_loop(){
-
+  open_checkvalve();
+  delay(10000);
+  close_checkvalve();
 }
 
 
@@ -186,7 +180,7 @@ void check_valve_loop(){
 */
 void color_sensor_loop(){
   // put your code to test the functions of color_sensor here.
-  float red, green, blue = read_color_sensor()
+  float red, green, blue = read_color_sensor();
   // print the RGB values to the serial monitor
   Serial.print("Red:   ");
   Serial.println(red);
@@ -202,7 +196,11 @@ void color_sensor_loop(){
 * loop to test the laser functions.
 */
 void motor_valve_loop(){
-
+  // put your main code here, to run repeatedly:
+  turn_distribution_valve(AIR);
+  delay(1000);
+  turn_distribution_valve(ANTIGEN);
+  delay(2000);
 }
 
 
@@ -210,7 +208,10 @@ void motor_valve_loop(){
 * loop to test the laser functions.
 */
 void pressure_sensor_loop(){
-
+  float pressure_hPa = read_pressure_sensor();
+  Serial.print("Pressure (hPa): "); Serial.println(pressure_hPa);
+  Serial.print("Pressure (PSI): "); Serial.println(pressure_hPa / 68.947572932);
+  delay(1000);
 }
 
 
@@ -218,35 +219,38 @@ void pressure_sensor_loop(){
 * loop to test the laser functions.
 */
 void pump_loop(){
-
+  // put your main code here, to run repeatedly:
+  turn_on_pump(128); // set pump speed to 50%
+  delay(5000);
+  turn_off_pump();
+  delay(5000);
 }
 
 
-void flush(int fluid){
-  if (fluid == BLOOD){
-    turn_distribution_valve(fluid);               //open the valve to recieve blood sample
-    start_filling_blood();                        //sent signal to user to fill in blood sample
-    finished_filling_blood();                     //recieved a signal when the blood is filled into the device
+void flush(fluid fluid_type){
+  if (fluid_type == BLOOD){
+    turn_distribution_valve(fluid_type);          //open the valve to recieve blood sample
+    write_do_something();                        //sent signal to user to fill in blood sample
     turn_distribution_valve(CLOSED);              //close the valve to prevent backflow
   }
 
   else{
-    float pressure = read_pressure_sensor()       //Read pressure value from the prssure sensor
-    IF pressure < "something" {                   //Check if the pressure is high enough
-      turn_on_pump();                             //turn on the pump to gain pressure
+    float pressure = read_pressure_sensor();       //Read pressure value from the prssure sensor
+    if (pressure < MAX_PRESSURE) {                   //Check if the pressure is high enough
+      turn_on_pump(128);                             //turn on the pump to gain pressure
     
-      while pressure < "something" {              //wait until the pressure reaches the wanted value
+      while (pressure < MAX_PRESSURE) {              //wait until the pressure reaches the wanted value
         float pressure = read_pressure_sensor();
         delay(1000);
       }
     }
     
-    open_checkvalve()
-    turn_distribution_valve(fluid);               //open distribution valve to let air flow
-    delay("some time")                            //wait for the air to flow
+    open_checkvalve();
+    turn_distribution_valve(fluid_type);               //open distribution valve to let air flow
+    delay(50);                            //wait for the air to flow
     turn_off_pump();                              //stop the flow of the air
     turn_distribution_valve(CLOSED);              //close the distribution valve
-    close_checkvalve()                            //close the valve after the reaction chamber
+    close_checkvalve();                            //close the valve after the reaction chamber
   }
   
 }
@@ -258,11 +262,11 @@ void flush(int fluid){
 */
 void analysation(){
   turn_on_laser();                               //turns on the green laser in the Reaction chamber
-  delay("some time");                            //delay to allow the Fluids to react and to emit light
+  delay(50);                            //delay to allow the Fluids to react and to emit light
   int data = read_color_sensor();                //reads the value of the AdaFruit lightsensor
   turn_off_laser();                             //turns off the green laser in the reaction chamber
-  int result = analyze_data(data);               //converts data to "readable Values" those to make sense if the sample is positiv or negative 
-  write_data_to_led(result);                     //converts positive negativ result to output on the LED 
-  wait_button_push();                            //waits until button is pushed to have enough time to read the value.
+  result result_type = analyze_data(data);               //converts data to "readable Values" those to make sense if the sample is positiv or negative 
+  write_to_led(result_type);                     //converts positive negativ result to output on the LED 
+  wait_for_input();                            //waits until button is pushed to have enough time to read the value.
 }
 

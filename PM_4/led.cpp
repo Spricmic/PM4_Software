@@ -1,5 +1,4 @@
 #include "led.h"
-#include <Arduino.h>
 
 // Define LED pins
 extern const int START_SWITCH_PIN;
@@ -50,7 +49,7 @@ void write_ready(){
 /**
 * green led starts blinking to show negativ result
 */
-void write_negativ(){
+void write_negative(){
   digitalWrite(GREEN_LED_PIN, HIGH);
   digitalWrite(YELLOW_LED_PIN, LOW);
   digitalWrite(RED_LED_PIN, LOW);
@@ -63,7 +62,7 @@ void write_negativ(){
 /**
 * red led starts blinking to show negativ result
 */
-void write_positiv(){
+void write_positive(){
   digitalWrite(GREEN_LED_PIN, LOW);
   digitalWrite(YELLOW_LED_PIN, LOW);
   digitalWrite(RED_LED_PIN, HIGH);

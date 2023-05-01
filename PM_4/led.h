@@ -21,21 +21,21 @@ void write_to_led(result input);
 void write_ready();
 
 // green led starts blinking to show negativ result
-void write_negativ();
+void write_negative();
 
 // yellow led starts blinking to signal, that some step need to be taken.
-void write_positiv();
+void write_positive();
 
 // Turn off all LEDs
 void write_do_something();
 
 // yellow light is constantly on to show that the system is progressing
-void write_work_inprogress()
+void write_work_inprogress();
 
 // turn on all the lights to signal a malfunction.
-void write_fail()
+void write_fail();
 
 // waits for button input until programm is continued.
-void wait_for_input()
+void wait_for_input();
 
 #endif

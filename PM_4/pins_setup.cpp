@@ -1,6 +1,4 @@
 #include "pins_setup.h"
-#include <Servo.h>
-
 // Create a Servo object for the distribution valve motor
 Servo Distribution_Valve_Motor;
 
