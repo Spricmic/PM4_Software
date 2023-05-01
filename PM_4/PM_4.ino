@@ -25,7 +25,7 @@ typedef enum {
 
 // define const
 const float MAX_PRESSURE = 10.0; // input max pressure
-mode choosen_mode = MOTOR_VALVE;  // defines in which mode the void loop runes for different testing setups
+const mode choosen_mode = MOTOR_VALVE;  // defines in which mode the void loop runes for different testing setups
 
 
 void setup() {
