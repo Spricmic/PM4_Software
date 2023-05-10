@@ -10,8 +10,9 @@
 #include <Wire.h>
 
 extern const float MAX_PRESSURE;
+extern int state;
 
 void test_setup();
-void test_loop(int state);
+void test_loop();
 void test_flush(fluid fluid_type);
 void test_analysation();

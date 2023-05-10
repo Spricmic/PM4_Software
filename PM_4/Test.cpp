@@ -10,7 +10,7 @@ void test_setup() {
 }
 
 
-void test_loop(int state) {
+void test_loop() {
   // put your main code here, to run repeatedly:
   switch (state)
   {

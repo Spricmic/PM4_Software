@@ -92,7 +92,7 @@ void loop() {
       break;
     case TEST_FULL:
       // Call function for the full process in test mode
-      test_loop(state);
+      test_loop();
       break;
     case LED:
       LED_loop();
