@@ -2,6 +2,7 @@
 #define PUMP_H
 
 #include <Arduino.h>
+#include "pins_setup.h"
 
 extern const int PUMP_PIN;
 

@@ -6,13 +6,15 @@
 #include "color_sensor.h"
 #include "pump.h"
 #include "check_valve.h"
+#include "test.h"
 #include <Servo.h>
 #include <Wire.h>
 
 
-// enumerator to spezifie which part of the process to activate.
+// enumerator to spezifie which part of the process to activate (for testing purposes).
 typedef enum {
   FULL,
+  TEST_FULL,
   LED,
   LASER,
   CHECK_VALVE,
@@ -25,7 +27,8 @@ typedef enum {
 
 // define const
 const float MAX_PRESSURE = 10.0; // input max pressure
-const mode choosen_mode = MOTOR_VALVE;  // defines in which mode the void loop runes for different testing setups
+const mode choosen_mode = FULL;  // defines in which mode the void loop runes for different testing setups
+int state = 0;   // keeps track of the State the process is in. see motor_valve.h enum fluid
 
 
 void setup() {
@@ -36,7 +39,12 @@ void setup() {
       setup_pins();
       pressure_sensor_setup();
       setup_color_sensor();
+      motor_valve_setup();
       setupPump();
+      break;
+    case TEST_FULL:
+      // Call function for the full process in test mode
+      test_setup();
       break;
     case LED:
       // Call function for LED mode
@@ -77,13 +85,14 @@ void setup() {
 }
 
 
-int state;
-
-
 void loop() {
   switch (choosen_mode) {
     case FULL:
       work_loop();
+      break;
+    case TEST_FULL:
+      // Call function for the full process in test mode
+      test_loop(state);
       break;
     case LED:
       LED_loop();
@@ -119,42 +128,49 @@ void work_loop() {
   // Air flush
   case 1:
     flush(AIR);
+    wait_for_input();
     state ++;
     break;
   
   // Antigen
   case 2:
     flush(ANTIGEN);
+    wait_for_input();
     state ++;
     break;
 
   // air
   case 3:
     flush(AIR);
+    wait_for_input();
     state ++;
     break;
 
   // blood
   case 4:
     flush(BLOOD);
+    wait_for_input();
     state ++;
     break;
 
   // washing
   case 5:
     flush(AIR);
+    wait_for_input();
     state ++;
     break;
 
   //Rox
   case 6:
     flush(ROX);
+    wait_for_input();
     state ++;
     break;
 
   //analysazion
   case 7:
     analysation();
+    wait_for_input();
     state ++;
     break;
 
@@ -167,7 +183,7 @@ void work_loop() {
   // air
   case 9:
     flush(AIR);
-    state = 1;
+    state = 1; // maybe change end state of system. to not jump imidiatly back to 1.
     break;
 
   default:
@@ -312,7 +328,7 @@ void flush(fluid fluid_type){
     
     open_checkvalve();
     turn_distribution_valve(fluid_type);               //open distribution valve to let air flow
-    delay(50);                            //wait for the air to flow
+    delay(5000);                            //wait for the air to flow
     turn_off_pump();                              //stop the flow of the air
     turn_distribution_valve(CLOSED);              //close the distribution valve
     close_checkvalve();                            //close the valve after the reaction chamber
@@ -327,7 +343,7 @@ void flush(fluid fluid_type){
 */
 void analysation(){
   turn_on_laser();                               //turns on the green laser in the Reaction chamber
-  delay(50);                            //delay to allow the Fluids to react and to emit light
+  delay(500);                            //delay to allow the Fluids to react and to emit light
   int data = read_color_sensor();                //reads the value of the AdaFruit lightsensor
   turn_off_laser();                             //turns off the green laser in the reaction chamber
   result result_type = analyze_data(data);               //converts data to "readable Values" those to make sense if the sample is positiv or negative 
