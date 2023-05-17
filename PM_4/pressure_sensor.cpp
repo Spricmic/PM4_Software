@@ -14,7 +14,7 @@ void pressure_sensor_setup(){
       delay(10);
     }
   }
-  Serial.print("Found MPRLS sensor");
+  Serial.println("Found MPRLS sensor");
 }
 
 
@@ -24,6 +24,7 @@ void pressure_sensor_setup(){
 *@return pressure value in hPa
 */
 float read_pressure_sensor() {
-  Serial.print(pressure_sensor.readPressure());
+  Serial.print("Called from pressure_sensor.cpp pressure: ");
+  Serial.println(pressure_sensor.readPressure());
   return pressure_sensor.readPressure();
 } 

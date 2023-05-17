@@ -7,68 +7,82 @@ void test_setup() {
   pressure_sensor_setup();
   setup_color_sensor();
   setupPump();
+  motor_valve_setup();
 }
 
 
 void test_loop() {
   // put your main code here, to run repeatedly:
+  Serial.print("state: ");
+  Serial.println(state);
   switch (state)
   {
   // Air flush
   case 1:
+    
     test_flush(AIR);
+    wait_for_input();
     state ++;
     break;
   
   // Antigen
   case 2:
     test_flush(ANTIGEN);
+    wait_for_input();
     state ++;
     break;
 
   // air
   case 3:
     test_flush(AIR);
+    wait_for_input();
     state ++;
     break;
 
   // blood
   case 4:
     test_flush(BLOOD);
+    wait_for_input();
     state ++;
     break;
 
   // washing
   case 5:
     test_flush(AIR);
+    wait_for_input();
     state ++;
     break;
 
   //Rox
   case 6:
     test_flush(ROX);
+    wait_for_input();
     state ++;
     break;
 
   //analysazion
   case 7:
     test_analysation();
+    wait_for_input();
     state ++;
     break;
 
   //washing
   case 8:
     test_flush(WASHING);
+    wait_for_input();
     state ++;
     break;
 
   // air
   case 9:
     test_flush(AIR);
+    wait_for_input();
     state = 1;
     break;
 
   default:
+    Serial.println("!!! default case !!!");
     state = 1;
     break;
   }

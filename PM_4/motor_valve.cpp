@@ -9,7 +9,7 @@ Servo Distribution_Valve_Motor;
 
 void motor_valve_setup() {
   Distribution_Valve_Motor.attach(SERVO_MOTOR_PIN);
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
 
 /** 
@@ -17,6 +17,8 @@ void motor_valve_setup() {
 *@param choosen_fluid types of enumerator fluid that the distribution valve turn to
 */
 void turn_distribution_valve(fluid choosen_fluid) { 
+  Serial.print("from motor_valve.cpp / turning to choosen_fluid => ");
+  Serial.println(choosen_fluid);
   float degree = convert_input_to_pwm(choosen_fluid);
   Distribution_Valve_Motor.write(degree);
   delay(15);

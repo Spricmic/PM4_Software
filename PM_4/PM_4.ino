@@ -26,8 +26,8 @@ typedef enum {
 
 
 // define const
-const float MAX_PRESSURE = 10.0; // input max pressure
-const mode choosen_mode = FULL;  // defines in which mode the void loop runes for different testing setups
+const float MAX_PRESSURE = 10; // input max pressure
+const mode choosen_mode = TEST_FULL;  // defines in which mode the void loop runes for different testing setups
 int state = 0;   // keeps track of the State the process is in. see motor_valve.h enum fluid
 
 

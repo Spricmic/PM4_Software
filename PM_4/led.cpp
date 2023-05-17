@@ -119,6 +119,7 @@ void write_fail(){
 * waits for button input until programm is continued.
 */
 void wait_for_input(){
+  Serial.println("wait for input function called");
   while (digitalRead(START_SWITCH_PIN) == LOW){
     delay(10);  // small delay to reduce CPU usage
     // wait for input
