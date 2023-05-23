@@ -42,13 +42,7 @@ int read_color_sensor() {
   Serial.print("F8 680nm : ");
   Serial.println(lightsensor.getChannel(AS7341_CHANNEL_680nm_F8));
 
-  Serial.print("Clear    : ");
-  Serial.println(lightsensor.getChannel(AS7341_CHANNEL_CLEAR));
-
-  Serial.print("Near IR  : ");
-  Serial.println(lightsensor.getChannel(AS7341_CHANNEL_NIR));
-
-  Serial.println("");
+  delay(1000);
 }
 
 result analyze_data(int color_sensor_reading) {

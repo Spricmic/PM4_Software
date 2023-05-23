@@ -25,7 +25,7 @@ typedef enum {
 
 
 // define const
-const mode choosen_mode = FULL;  // defines in which mode the void loop runes for different testing setups
+const mode choosen_mode = COLOR_SENSOR;  // defines in which mode the void loop runes for different testing setups
 int state = 0;                    // keeps track of the State the process is in. see motor_valve.h enum fluid
 
 
@@ -246,7 +246,7 @@ void check_valve_loop() {
 */
 void color_sensor_loop() {
   // put your code to test the functions of color_sensor here.
-  Serial.println("start color sensor loop");
+  turn_on_laser();
   float red, green, blue = read_color_sensor();
   // print the RGB values to the serial monitor
   delay(1000);
