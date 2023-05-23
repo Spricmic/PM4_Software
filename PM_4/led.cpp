@@ -40,11 +40,11 @@ void write_to_led(result r){
 * turns on green signal to show that the device is ready.
 */
 void write_ready(){
-  while (digitalRead(START_SWITCH_PIN) == LOW){
+  //while (digitalRead(START_SWITCH_PIN) == LOW){
   digitalWrite(GREEN_LED_PIN, HIGH);
   digitalWrite(YELLOW_LED_PIN, LOW);
   digitalWrite(RED_LED_PIN, LOW);
-  }
+  //}
 }
 
 
@@ -55,12 +55,12 @@ void write_negative(){
   digitalWrite(GREEN_LED_PIN, LOW);
   digitalWrite(YELLOW_LED_PIN, LOW);
   digitalWrite(RED_LED_PIN, LOW);
-  while (digitalRead(START_SWITCH_PIN) == LOW){
+  //while (digitalRead(START_SWITCH_PIN) == LOW){
     digitalWrite(GREEN_LED_PIN, HIGH);
     delay(500);
     digitalWrite(GREEN_LED_PIN, LOW);
     delay(500);
-  }
+  //}
 }
 
 
@@ -71,12 +71,12 @@ void write_positive(){
   digitalWrite(GREEN_LED_PIN, LOW);
   digitalWrite(YELLOW_LED_PIN, LOW);
   digitalWrite(RED_LED_PIN, LOW);
-  while (digitalRead(START_SWITCH_PIN) == LOW){
+  //while (digitalRead(START_SWITCH_PIN) == LOW){
     digitalWrite(RED_LED_PIN, HIGH);
     delay(500);
     digitalWrite(RED_LED_PIN, LOW);
     delay(500);
-  }
+  //}
 }
 
 
@@ -87,12 +87,12 @@ void write_do_something(){
   digitalWrite(GREEN_LED_PIN, LOW);
   digitalWrite(YELLOW_LED_PIN, LOW);
   digitalWrite(RED_LED_PIN, LOW);
-  while (digitalRead(START_SWITCH_PIN) == LOW){
+  //while (digitalRead(START_SWITCH_PIN) == LOW){
     digitalWrite(YELLOW_LED_PIN, HIGH);
     delay(500);
     digitalWrite(YELLOW_LED_PIN, LOW);
     delay(500);
-  }
+  //}
 }
 
 

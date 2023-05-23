@@ -4,7 +4,6 @@
 void test_setup() {
 // put your setup code here, to run once:
   setup_pins();
-  pressure_sensor_setup();
   setup_color_sensor();
   setupPump();
   motor_valve_setup();
@@ -21,14 +20,12 @@ void test_loop() {
   case 1:
     
     test_flush(AIR);
-    wait_for_input();
     state ++;
     break;
   
   // Antigen
   case 2:
     test_flush(ANTIGEN);
-    wait_for_input();
     state ++;
     break;
 
@@ -98,20 +95,11 @@ void test_flush(fluid fluid_type){
   }
 
   else{
-    float pressure = read_pressure_sensor();       //Read pressure value from the prssure sensor
-    if (pressure < MAX_PRESSURE) {                   //Check if the pressure is high enough
-      turn_on_pump(128);                             //turn on the pump to gain pressure
-      delay(3000);                                  //Check if pump is on
-    
-      while (pressure < MAX_PRESSURE) {             //wait until the pressure reaches the wanted value
-        float pressure = read_pressure_sensor();
-        delay(2000);
-      }
-    }
-    
-    open_checkvalve();
-    delay(3000);                                  //Check if the checkvale is turned
+    turn_on_pump(128);                             //turn on the pump to gain pressure
+    delay(1); 
     turn_distribution_valve(fluid_type);          //open distribution valve to let air flow
+    delay(1);                                  //Check if the checkvale is turned
+    open_checkvalve();
     delay(3000);                                  //wait for the air to flow
     turn_off_pump();                              //stop the flow of the air
     delay(3000);                                  //Check if the pump is off

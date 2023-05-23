@@ -31,16 +31,16 @@ void turn_distribution_valve(fluid choosen_fluid) {
 */
 float convert_input_to_pwm(fluid state) {
   if (state == AIR) {
-    return 0.0;  // value for: AIR
+    return 1.0;  // value for: AIR
   }else if (state == ANTIGEN) {
-    return 20.0;  // value for: ANTIGEN
+    return 61.0;  // value for: ANTIGEN
   }else if (state == BLOOD) {
-    return 40.0;  // value for: BLOOD
+    return 301.0;  // value for: BLOOD
   }else if (state == ROX) {
-    return 60.0;  // value for: ROX
+    return 121.0;  // value for: ROX
   }else if (state == WASHING) {
-    return 80.0;  // value for: WASHING 
+    return 181.0;  // value for: WASHING 
   }else if (state == CLOSED) {
-    return 100.0;  // value for: CLOSED
+    return 241.0;  // value for: CLOSED
   }
 }
